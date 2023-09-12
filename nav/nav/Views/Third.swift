@@ -20,7 +20,8 @@ class Third: UIViewController {
 
     @IBAction func logout(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let first = storyboard.instantiateViewController(withIdentifier: "onenav")
+        let first = storyboard.instantiateViewController(withIdentifier: "onenav") /* calling the first navigation controller not the first view ,
+        else values wont be reset properly */
         self.view.window?.rootViewController = first
         self.view.window?.makeKeyAndVisible()
 
