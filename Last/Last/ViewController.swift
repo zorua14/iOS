@@ -9,9 +9,9 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    var selectedCategory: String?
-    var isFilteringEnabled = false
-
+    var selectedCategory = "None of These"
+    
+    var filterSelected  = false
     
     @IBAction func filter(_ sender: Any) {
         
@@ -40,7 +40,7 @@ class ViewController: UIViewController {
         ]
     ]
     
-    let categoryOptions = ["EDUCATION", "SOCIAL NETWORKING", "TRAVEL", "NEWS", "MARKETING", "None of These"]
+    let categoryOptions = ["EDUCATION","SOCIAL NETWORKING","TRAVEL","NEWS","MARKETING", "None of These"]
 
 //MARK:  FUNCTIONS 
     
@@ -64,14 +64,7 @@ class ViewController: UIViewController {
         }
     }
     
-    // Call to enable and disable filtering
-    
-    func filterTableView(withCategory category: String?) {
-        if isFilteringEnabled {
-            selectedCategory = category
-            tableView.reloadData()
-        }
-    }
+   
     func sortArrayOfDictionariesByAppNameIfNotEmpty(_ array: inout [[String: String]]) {
         if !array.isEmpty {
             array.sort { (dict1, dict2) in
@@ -90,6 +83,8 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         tableView.register(UINib(nibName: "DemoCell", bundle: nil), forCellReuseIdentifier: "DemoCell")
+        tableView.register(UINib(nibName: "TitleCell", bundle: nil), forCellReuseIdentifier: "TitleCell")
+        
         tableView.dataSource = self
         tableView.delegate = self
         
@@ -116,79 +111,91 @@ extension ViewController:UITableViewDataSource{
         return 2
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
-            return updated.count
-        } else
+
+        
+        if selectedCategory == "None of These"
         {
-            return notUpdated.count
+            return section == 0 ? updated.count : notUpdated.count
+        }
+        else{
+            if section == 0 {
+                print(updated.filter { $0["category name"] == selectedCategory}.count)
+
+                return updated.filter { $0["category name"] == selectedCategory}.count
+            }
+            else{
+                print(notUpdated.filter { $0["category name"] == selectedCategory}.count)
+                return notUpdated.filter { $0["category name"] == selectedCategory}.count
+                
+
+            }
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DemoCell") as! DemoCell
-        var data: [String: String]?
-        data = getDataForIndexPath(indexPath)
-        if  let dat = getDataForIndexPath(indexPath) {
-            
-                // Check if filtering is enabled and the cell's category matches the selected category
-            
-                if isFilteringEnabled, let selectedCategory = selectedCategory, let cellCategory = dat["category name"], selectedCategory != cellCategory {
-                    cell.isHidden = true // Hide the cell if it doesn't match the selected category
-                } else {
-                     
-                            if indexPath.section == 0 {
-                                    data = updated[indexPath.row]
-                                    cell.updateButton.isHidden = true
-                                    cell.updateButton.isEnabled = false
-                            }
-                            else
-                            {
-                                data = notUpdated[indexPath.row]
-                                cell.updateButton.isHidden = false
-                                cell.updateButton.isEnabled = true
-                            }
-
-                    cell.isHidden = false // Ensure the cell is not hidden
-                }
-            } else {
-                cell.isHidden = true // Hide the cell if there's no data for the indexPath
-            }
-     
-                
+        
         // Configure cell labels with data
-        cell.setNames(data!)
+        
+        if filterSelected == false {
+                    // Filter and display data based on the specified category
+            if indexPath.section == 0 {
+                        let appInfo = updated[indexPath.row]
+                        cell.setNames(appInfo)
+                        cell.updateButton.isHidden = true
+                        cell.updateButton.isEnabled = false
+
+
+                    } else {
+                        let appInfo = notUpdated[indexPath.row]
+                        cell.setNames(appInfo)
+                        cell.updateButton.isHidden = false
+                        cell.updateButton.isEnabled = true
+
+                    }
+
+            
+                } else {
+                    
+                if indexPath.section == 0 {
+                        let filteredUpdatedData = updated.filter { $0["category name"] == selectedCategory }
+                        let appInfo = filteredUpdatedData[indexPath.row]
+                        cell.setNames(appInfo)
+                        cell.updateButton.isHidden = true
+                        cell.updateButton.isEnabled = false
+
+                    } else {
+                        let filteredNotUpdatedData = notUpdated.filter { $0["category name"] == selectedCategory }
+                        let appInfo = filteredNotUpdatedData[indexPath.row]
+                        cell.setNames(appInfo)
+                        cell.updateButton.isHidden = false
+                        cell.updateButton.isEnabled = true
+
+                    }
+
+                    
+                }
+
+        
         cell.updateButton.addTarget(self, action: #selector(buttonPressed(_:)), for: .touchUpInside)
 
         return cell
     }
     
-    func getDataForIndexPath(_ indexPath: IndexPath) -> [String: String]? {
-        var dataArray: [[String: String]] = []
-
-        // Determine which array to use based on the section
-        if indexPath.section == 0 {
-                dataArray = updated
-            } else if indexPath.section == 1 {
-                dataArray = notUpdated
-            } else {
-                return nil // Return nil if the section is out of bounds
-            }
-            
-            // Check if the indexPath.row is within bounds for the selected array
-            if indexPath.row >= 0 && indexPath.row < dataArray.count {
-                return dataArray[indexPath.row]
-            } else {
-                return nil // Return nil if the indexPath is out of bounds
-            }
-    }
-
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if section == 0 {
-            return "Updated Section"
-        } else {
-            return "Not Updated Section"
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TitleCell") as! TitleCell
+        
+        if section == 0{
+            cell.sectionTitle.text = "Updated Section"
         }
+        else{
+            cell.sectionTitle.text = "Not Updated Section"
+
+        }
+        return cell
+
     }
+    
     
 }
 
@@ -232,16 +239,18 @@ extension ViewController:UIPickerViewDataSource, UIPickerViewDelegate{
         }
 
         func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        let selectedCategory = categoryOptions[row]
-        
-        if selectedCategory != "None of These" {
-            isFilteringEnabled = true
-            filterTableView(withCategory: selectedCategory)
-        } else {
-            isFilteringEnabled = false
+            selectedCategory = categoryOptions[row]
+            print(selectedCategory)
+            
+            if selectedCategory != "None of These"{
+                filterSelected = true
+            }
+            else{
+                filterSelected = false
+            }
             tableView.reloadData() // Show all cells when "None of These" is selected
-        }
-        pickerview.isHidden = true
+        
+           pickerview.isHidden = true
     }
 
 }
