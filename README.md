@@ -1,2 +1,2 @@
-# Root view
-This project is created to demonstrate navigation between views and changing a particular view as rootview controller. Added some minimal logics without following SOLID principles
+# My iOS projects
+This branch consists of various projects in which I have worked over the period of my Internship 
