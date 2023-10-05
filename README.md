@@ -1,9 +1,9 @@
 # My iOS projects
 This repository consists of various projects in which I have worked over the period of my Internship 
- 
-![Simulator Screen Recording - iPhone 14 Pro - 2023-10-05 at 17 05 49](https://github.com/zorua14/iOS/assets/94368303/1bcaf1d0-d76e-4ce5-9a5f-15f5704bd9ec)
+ ![Simulator Screen Recording - iPhone 14 Pro - 2023-10-05 at 16 19 37](https://github.com/zorua14/iOS/assets/94368303/3595ebeb-9686-4aff-bcf9-9db4744ff7fe)
+![Simulator Screen Recording - iPhone 14 Pro - 2023-10-05 at 17 13 36](https://github.com/zorua14/iOS/assets/94368303/92954e1c-ba70-4d55-ba72-381ddceb3cf0)
+![Simulator Screen Recording - iPhone 14 Pro - 2023-10-05 at 17 05 49](https://github.com/zorua14/iOS/assets/94368303/94a2538d-1a46-4134-a886-f53cada03232)
+![Simulator Screen Recording - iPhone 14 Pro - 2023-10-05 at 16 57 59](https://github.com/zorua14/iOS/assets/94368303/352df2ae-b7df-4756-b1a7-eaa3d5a4741f)
 
-![Simulator Screen Recording - iPhone 14 Pro - 2023-10-05 at 16 57 59](https://github.com/zorua14/iOS/assets/94368303/999d1c7c-cedd-488b-b4c0-bb50a3b82143)
 
-![Simulator Screen Recording - iPhone 14 Pro - 2023-10-05 at 17 13 36](https://github.com/zorua14/iOS/assets/94368303/3765effe-ff50-474e-bea7-66604acfc497)
 
